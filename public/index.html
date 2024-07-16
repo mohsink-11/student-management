@@ -11,11 +11,11 @@
         <header>
             <h1>Student Management</h1>
             <nav>
-                <a href="#home">New Student</a>
-                <a href="#about">Delete Student</a>
-                <a href="#services">Update Student</a>
-                <a href="/students/2">View Student</a>
-              </nav>
+                <a id="add-stud" href="#" onclick="addStudentForm()">New Student</a>
+                <a href="#" onclick="deleteStudent()">Delete Student</a>
+                <a href="#" onclick="updateStudentForm()">Update Student</a>
+                <a href="http://localhost:3000">View Student</a>
+            </nav>
         </header>
         <main>
             <div class="student-list">
@@ -33,6 +33,29 @@
                         <!-- Student rows will be populated here -->
                     </tbody>
                 </table>
+            </div>
+            <div class="view-student">
+                <h2>View Student</h2>
+                <input type="number" id="student-id" placeholder="Enter Student ID">
+                <button onclick="viewStudentById()">View Student</button>
+                <div id="student-details">
+                    <!-- Student details will be displayed here -->
+                </div>
+            </div>
+            <div id="student-update" class="update-student hidden">
+                <h2>Update Student</h2>
+                <input type="number" id="update-student-id" placeholder="Enter Student ID">
+                <input type="text" id="update-student-name" placeholder="Enter Student Name">
+                <input type="number" id="update-student-age" placeholder="Enter Student Age">
+                <input type="text" id="update-student-grade" placeholder="Enter Student Grade">
+                <button onclick="updateStudent()">Update Student</button>
+            </div>
+            <div id="student-add" class="add-student hidden">
+                <h2>Add Student</h2>
+                <input type="text" id="new-student-name" placeholder="Enter Student Name">
+                <input type="number" id="new-student-age" placeholder="Enter Student Age">
+                <input type="text" id="new-student-grade" placeholder="Enter Student Grade">
+                <button onclick="addStudent()">Add Student</button>
             </div>
         </main>
     </div>

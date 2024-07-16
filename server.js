@@ -72,7 +72,7 @@ app.get('/logout', (req, res) => {
 // Protect routes
 app.use('/students', isAuthenticated);
 
-// CRUD routes for students (already implemented)
+// CRUD routes for students
 app.post('/students', (req, res) => {
     let student = req.body;
     let sql = 'INSERT INTO students SET ?';
@@ -99,21 +99,53 @@ app.put('/students/:id', (req, res) => {
     });
 });
 
-app.delete('/students/:id', (req, res) => {
-    let sql = `DELETE FROM students WHERE id = ${req.params.id}`;
-    let query = db.query(sql, (err, result) => {
-        if (err) throw err;
-        res.send('Student deleted...');
+app.delete('/students', (req, res) => {
+    const { id, name } = req.query;
+
+    if (!id && !name) {
+        return res.status(400).send('Bad Request: Either ID or name must be provided');
+    }
+
+    let sql;
+    let params;
+
+    if (id) {
+        sql = 'DELETE FROM students WHERE id = ?';
+        params = [id];
+    } else if (name) {
+        sql = 'DELETE FROM students WHERE name = ?';
+        params = [name];
+    }
+
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            console.error('Error during deletion:', err);
+            return res.status(500).send('Server error');
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).send('Student not found');
+        } else {
+            return res.send('Student deleted');
+        }
     });
 });
 
-app.delete('/students/name/:name', (req, res) => {
-    let sql = `DELETE FROM students WHERE name = ?`;
-    let query = db.query(sql, [req.params.name], (err, result) => {
+app.get('/students/:id', (req, res) => {
+    let sql = 'SELECT * FROM students WHERE id = ?';
+    let query = db.query(sql, [req.params.id], (err, results) => {
         if (err) throw err;
-        res.send('Student deleted...');
+        res.json(results);
     });
 });
+
+app.get('/students/:id', (req, res) => {
+    let sql = 'SELECT * FROM students WHERE id = ?';
+    let query = db.query(sql, [req.params.id], (err, results) => {
+        if (err) throw err;
+        res.json(results);
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
